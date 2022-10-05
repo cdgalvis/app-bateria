@@ -223,18 +223,19 @@
          return ($result); 
       }
 
-      public function addRespuestas($formato,$tipo,$pregunta,$respuesta,$usuario) { 
+      public function addRespuestas($formato,$tipo,$pregunta,$respuesta,$usuario,$fechaActual) {        
 
         try {
             $conexion = Database::getInstance(); 
-            $result = $conexion->db->prepare("INSERT INTO detalle_respuestas (det_formato,det_tipo,det_pregunta,det_respuesta,det_usuario) VALUES (:det_formato, :det_tipo, :det_pregunta, :det_respuesta, :det_usuario)");
+            $result = $conexion->db->prepare("INSERT INTO detalle_respuestas (det_formato,det_tipo,det_pregunta,det_respuesta,det_usuario,det_fecha) VALUES (:det_formato, :det_tipo, :det_pregunta, :det_respuesta, :det_usuario, :det_fecha)");
             $result->execute(
                                 array(
                                     ':det_formato'=>$formato, 
                                     ':det_tipo'=>$tipo, 
                                     ':det_pregunta'=>$pregunta, 
                                     ':det_respuesta'=>$respuesta, 
-                                    ':det_usuario'=>$usuario,  
+                                    ':det_usuario'=>$usuario, 
+                                    ':det_fecha'=>$fechaActual,  
                                 )
                             );
             return "5";

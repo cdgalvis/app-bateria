@@ -415,7 +415,7 @@ function EnviarDatosBurnout() {
         igual = 1
     }
 
-    if(igual == 1){
+    /*if(igual == 1){
         Swal.fire({
             title: '<strong>Te faltan los siguientes datos: </strong>',
             icon: 'error',
@@ -426,9 +426,9 @@ function EnviarDatosBurnout() {
             focusConfirm: false
           })
         
-    }else{
+    }else{*/
         document.Burnout.submit()
-    }
+    //}
 
 }
 

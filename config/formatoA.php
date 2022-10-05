@@ -14,25 +14,27 @@
     $conteo_estres       = $_POST["conteo_estres"];
     $conteo_extralaboral = $_POST["conteo_extralaboral"];
 
+    $fechaActual    = date('Y-m-d');
+
     for ($i=1; $i < $conteo_intralaboral; $i++) { 
         $respuesta_intralaboral = $_POST['intralaboral'.$i];
 
         $conexion = new Database;  
-        $result1 = $conexion->addRespuestas($formato,$intralaboral,$i,$respuesta_intralaboral,$usuario);
+        $result1 = $conexion->addRespuestas($formato,$intralaboral,$i,$respuesta_intralaboral,$usuario,$fechaActual);
     }
 
     for ($j=1; $j < $conteo_estres; $j++) { 
         $respuesta_estres = $_POST['estres'.$j];
 
         $conexion = new Database;  
-        $result2 = $conexion->addRespuestas($formato,$estres,$j,$respuesta_estres,$usuario);
+        $result2 = $conexion->addRespuestas($formato,$estres,$j,$respuesta_estres,$usuario,$fechaActual);
     }
 
     for ($x=1; $x < $conteo_extralaboral; $x++) { 
         $respuesta_extralaboral = $_POST['extralaboral'.$x];
 
         $conexion = new Database;  
-        $result3 = $conexion->addRespuestas($formato,$extralaboral,$x,$respuesta_extralaboral,$usuario);
+        $result3 = $conexion->addRespuestas($formato,$extralaboral,$x,$respuesta_extralaboral,$usuario,$fechaActual);
     }
 
     header('Location: ../vistas/formatos/formatoa.php?err='.$result); 
