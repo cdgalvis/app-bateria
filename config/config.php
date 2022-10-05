@@ -24,6 +24,24 @@
          return self::$instance; 
       } 
 
+      public function DatosDepartamentos() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT dep_id,dep_nombre	 from departamentos order by dep_id asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosMunicipios() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT mun_id,mun_nombre,mun_estado,dep_id  from municipios order by mun_id asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
       public function DatosAutenticacion($username,$password) 
       { 
          $conexion = Database::getInstance(); 
@@ -38,6 +56,69 @@
       { 
          $conexion = Database::getInstance(); 
          $sql="SELECT id,gru_nombre,gru_visible,gru_url from groups order by id asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosRespuestas() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT res_codigo,res_nombre	 from respuestas order by res_codigo asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosFormatoAIntralaboral() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT pre_codigo,pre_nombre,form_codigo,tip_codigo	 from preguntas WHERE form_codigo = 1 and tip_codigo = 1 order by pre_codigo asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosFormatoBIntralaboral() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT pre_codigo,pre_nombre,form_codigo,tip_codigo	 from preguntas WHERE form_codigo = 2 and tip_codigo = 1 order by pre_codigo asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosFormatoAestres() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT pre_codigo,pre_nombre,form_codigo,tip_codigo	 from preguntas WHERE form_codigo = 1 and tip_codigo = 2 order by pre_codigo asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosFormatoAExtralaboral() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT pre_codigo,pre_nombre,form_codigo,tip_codigo	 from preguntas WHERE form_codigo = 1 and tip_codigo = 3 order by pre_codigo asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosFormatoBExtralaboral() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT pre_codigo,pre_nombre,form_codigo,tip_codigo	 from preguntas WHERE form_codigo = 2 and tip_codigo = 3 order by pre_codigo asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosBurnout() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT pre_codigo,pre_nombre,form_codigo,tip_codigo	 from preguntas WHERE form_codigo = 3 and tip_codigo = 4 order by pre_codigo asc"; 
          $result = $conexion->db->prepare($sql);
          $result->execute(); 
          return ($result); 
@@ -108,6 +189,22 @@
          return $result; 
       }
 
+      public function CantidadEvaluaciones() { 
+        $conexion = Database::getInstance(); 
+        $sql="SELECT CASE WHEN count(1) IS null or count(1) = '' THEN 1 ELSE count(1)+1 END as id FROM evaluacion"; 
+        $result = $conexion->db->prepare($sql);    
+        $result->execute(); 
+        return $result; 
+     }
+
+     public function SesionEvaluaciones() { 
+        $conexion = Database::getInstance(); 
+        $sql="SELECT CASE WHEN codigo_sesion IS null or codigo_sesion = '' THEN 1 ELSE codigo_sesion+1 END as id FROM evaluacion"; 
+        $result = $conexion->db->prepare($sql);    
+        $result->execute(); 
+        return $result; 
+     }
+
       public function ValidacionUsername($username) { 
          $conexion = Database::getInstance(); 
          $sql="SELECT id,nombres,apellidos,username,role from users where username=:username"; 
@@ -125,6 +222,26 @@
          $result->execute($params); 
          return ($result); 
       }
+
+      public function addRespuestas($formato,$tipo,$pregunta,$respuesta,$usuario) { 
+
+        try {
+            $conexion = Database::getInstance(); 
+            $result = $conexion->db->prepare("INSERT INTO detalle_respuestas (det_formato,det_tipo,det_pregunta,det_respuesta,det_usuario) VALUES (:det_formato, :det_tipo, :det_pregunta, :det_respuesta, :det_usuario)");
+            $result->execute(
+                                array(
+                                    ':det_formato'=>$formato, 
+                                    ':det_tipo'=>$tipo, 
+                                    ':det_pregunta'=>$pregunta, 
+                                    ':det_respuesta'=>$respuesta, 
+                                    ':det_usuario'=>$usuario,  
+                                )
+                            );
+            return "5";
+        } catch(PDOException $e) {
+            return "0";
+        }
+     }
 
       public function addUsuario($username,$password,$nombres,$apellidos,$identificacion,$email,$roles,$active,$tipo_documento) { 
 
@@ -274,6 +391,18 @@
          }
       }
 
+      public function deleteEvaluacionDet($id){
+        try{
+            $conexion = Database::getInstance(); 
+            $result = $conexion->db->prepare("DELETE FROM detevaluacion WHERE id=:id");
+            $result->execute(array(':id'=>$id));
+
+            return "1";
+        }catch (PDOException $e) {
+            return "0";
+        }
+     }
+
       public function editRol($id) { 
          $conexion = Database::getInstance(); 
          $sql="SELECT id,rol_nombre from roles where id=:id"; 
@@ -285,7 +414,7 @@
 
       public function editEvaluacion($id) { 
          $conexion = Database::getInstance(); 
-         $sql="SELECT id,companies_id,cities_id,codigo_sesion,respuesta,formatoA,formatoB,burnout from evaluacion where id=:id"; 
+         $sql="SELECT id,companies_id,cities_id,codigo_sesion,respuesta,formatoA,formatoB,burnout,users_id from evaluacion where id=:id"; 
          $result = $conexion->db->prepare($sql);     
          $params = array("id" => $id); 
          $result->execute($params);
@@ -388,6 +517,26 @@
          }
       }
 
+        public function addDetEvaluacion($evaluacion_id,$contacts_id,$nombres,$fecha_registro,$companies_id) { 
+
+            try {
+                $conexion = Database::getInstance(); 
+                $result = $conexion->db->prepare("INSERT INTO detevaluacion (evaluacion_id,contacts_id,nombres,fecha_registro,companies_id) VALUES (:evaluacion_id, :contacts_id, :nombres, :fecha_registro, :companies_id)");
+                $result->execute(
+                                    array(
+                                    ':evaluacion_id'=>$evaluacion_id,
+                                    ':contacts_id'=>$contacts_id, 
+                                    ':nombres'=>$nombres, 
+                                    ':fecha_registro'=>$fecha_registro,
+                                    ':companies_id'=>$companies_id
+                                    )
+                                );
+                return "5";
+            } catch(PDOException $e) {
+                return "0";
+            }
+        }
+
       public function DatosContactosEmpresa($companies_id) { 
          $conexion = Database::getInstance(); 
          $sql="SELECT id,nombres,apellidos,tipo_documento,identificacion,area,email,telefono,fecha_nacimiento,ciudad,companies_id from contacts where companies_id=:companies_id"; 
@@ -395,12 +544,31 @@
          $result->execute(array(':companies_id'=>$companies_id));
          return $result; 
       }
-      
-      public function updateEvaluacion($evaluacion_id,$companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout) { 
 
+      public function DatosContactosEmpresaBus($companies_id,$txtbus) { 
+        $conexion = Database::getInstance(); 
+
+        $pattern = '%'.$txtbus.'%';
+        $sql="SELECT id,nombres,apellidos,tipo_documento,identificacion,area,email,telefono,fecha_nacimiento,ciudad,companies_id 
+                FROM contacts 
+                WHERE companies_id=:companies_id and (identificacion LIKE :identificacion or nombres LIKE :nombres or apellidos LIKE :apellidos)"; 
+        $result = $conexion->db->prepare($sql);     
+        $result->execute(array(':companies_id'=>$companies_id,':identificacion'=>$pattern,':nombres'=>$pattern,':apellidos'=>$pattern));       
+        return $result; 
+     }
+
+      public function DatosDetContactosEvalu($companies_id,$evaluacion_id) { 
+        $conexion = Database::getInstance(); 
+        $sql="SELECT id,evaluacion_id,contacts_id,nombres,fecha_registro,companies_id from detevaluacion where companies_id=:companies_id and evaluacion_id=:evaluacion_id"; 
+        $result = $conexion->db->prepare($sql);     
+        $result->execute(array(':companies_id'=>$companies_id, ':evaluacion_id'=>$evaluacion_id));
+        return $result; 
+     }
+      
+      public function updateEvaluacion($evaluacion_id,$companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout,$users_id) { 
          try {
              $conexion = Database::getInstance(); 
-             $result = $conexion->db->prepare("UPDATE evaluacion set companies_id=:companies_id, cities_id=:cities_id, codigo_sesion=:codigo_sesion, respuesta=:respuesta,formatoA=:formatoA,formatoB=:formatoB, burnout=:burnout where evaluacion_id=:evaluacion_id");
+             $result = $conexion->db->prepare("UPDATE evaluacion set companies_id=:companies_id, cities_id=:cities_id, codigo_sesion=:codigo_sesion, respuesta=:respuesta,formatoA=:formatoA,formatoB=:formatoB, burnout=:burnout, users_id=:users_id where id=:evaluacion_id");
              $result->execute(
                                  array(
                                      ':companies_id'=>$companies_id, 
@@ -410,6 +578,7 @@
                                      ':formatoA'=>$formatoA,
                                      ':formatoB'=>$formatoB,
                                      ':burnout'=>$burnout,
+                                     ':users_id'=>$users_id,
                                      ':evaluacion_id'=>$evaluacion_id
                                  )
                              );
@@ -417,22 +586,29 @@
          } catch(PDOException $e) {
              return "0";
          }
+
+        
       }
 
-      public function addEvaluacion($companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout) { 
+      public function addEvaluacion($id,$companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout,$users_id) { 
+        if($formatoA=="") $formatoA =0;
+        if($formatoB=="") $formatoB =0;
+        if($burnout=="")  $burnout  =0;
 
-         try {
+        try {
              $conexion = Database::getInstance(); 
-             $result = $conexion->db->prepare("INSERT INTO evaluacion (companies_id,cities_id,codigo_sesion,respuesta,formatoA,formatoB,burnout) VALUES (:companies_id, :cities_id, :codigo_sesion, :respuesta, :formatoA, :formatoB, :burnout)");
+             $result = $conexion->db->prepare("INSERT INTO evaluacion (id,companies_id,cities_id,codigo_sesion,respuesta,formatoA,formatoB,burnout,users_id) VALUES (:id, :companies_id, :cities_id, :codigo_sesion, :respuesta, :formatoA, :formatoB, :burnout, :users_id)");
              $result->execute(
                                  array(
+                                    ':id'=>$id, 
                                     ':companies_id'=>$companies_id, 
                                     ':cities_id'=>$cities_id, 
                                     ':codigo_sesion'=>$codigo_sesion,
                                     ':respuesta'=>$respuesta,  
                                     ':formatoA'=>$formatoA,
                                     ':formatoB'=>$formatoB,
-                                    ':burnout'=>$burnout
+                                    ':burnout'=>$burnout,
+                                    ':users_id'=>$users_id
                                  )
                              );
              return "5";
@@ -440,6 +616,91 @@
              return "0";
          }
       }
+
+      public function RegistrarDatosPersonales($tipo_documento,$identificacion,$nombre_completo,$anio_nacimiento,$estado_civil,$nivel_estudio,$ocupacion_profesion,$residenciaciudad,$residenciadepartamento,$estrato,$dependencia_economica,$trabajociudad,$trabajodepartamento,$aniostrabajo,$cargo_ocupa,$tipo_cargo,$aniosCtrabajo,$nombre_area,$tipo_contrato,$horas_diarias,$sexoradio,$viviendaradio,$salarioradio) { 
+        try {
+              $conexion = Database::getInstance(); 
+              $result = $conexion->db->prepare("INSERT INTO datospersonales (tipo_documento,identificacion,nombre_completo,anio_nacimiento,estado_civil,nivel_estudio,ocupacion_profesion,residenciaciudad,residenciadepartamento,estrato,dependencia_economica,trabajociudad,trabajodepartamento,anios_trabajo,cargo_ocupa,tipo_cargo,anios_cargo,nombre_area,tipo_contrato,horas_diarias,sexo,tipo_vivienda,tipo_salario) VALUES (:tipo_documento,:identificacion,:nombre_completo,:anio_nacimiento,:estado_civil,:nivel_estudio,:ocupacion_profesion,:residenciaciudad,:residenciadepartamento,:estrato,:dependencia_economica,:trabajociudad,:trabajodepartamento,:anios_trabajo,:cargo_ocupa,:tipo_cargo,:anios_cargo,:nombre_area,:tipo_contrato,:horas_diarias,:sexo,:tipo_vivienda,:tipo_salario)");
+              $result->execute(
+                                array(
+                                   ':tipo_documento'          => $tipo_documento,
+                                   ':identificacion'          => $identificacion,
+                                   ':nombre_completo'         => $nombre_completo,
+                                   ':anio_nacimiento'         => $anio_nacimiento,
+                                   ':estado_civil'            => $estado_civil,
+                                   ':nivel_estudio'           => $nivel_estudio,
+                                   ':ocupacion_profesion'     => $ocupacion_profesion,
+                                   ':residenciaciudad'        => $residenciaciudad,
+                                   ':residenciadepartamento'  => $residenciadepartamento,
+                                   ':estrato'                 => $estrato,
+                                   ':dependencia_economica'   => $dependencia_economica,
+                                   ':trabajociudad'           => $trabajociudad,
+                                   ':trabajodepartamento'     => $trabajodepartamento,
+                                   ':anios_trabajo'           => $aniostrabajo,
+                                   ':cargo_ocupa'             => $cargo_ocupa,
+                                   ':tipo_cargo'              => $tipo_cargo,
+                                   ':anios_cargo'             => $aniosCtrabajo,
+                                   ':nombre_area'             => $nombre_area,
+                                   ':tipo_contrato'           => $tipo_contrato,
+                                   ':horas_diarias'           => $horas_diarias,
+                                   ':sexo'                    => $sexoradio,
+                                   ':tipo_vivienda'           => $viviendaradio,
+                                   ':tipo_salario'            => $salarioradio
+                                )
+                             );
+              return "5";
+        } catch(PDOException $e) {
+              return "0";
+        } 
+    }
+
+
+    public function ValidacionDatosPersonales($identificacion) { 
+      $conexion = Database::getInstance(); 
+      $sql="SELECT id,tipo_documento,identificacion,nombre_completo,anio_nacimiento,estado_civil,nivel_estudio,ocupacion_profesion,residenciaciudad,residenciadepartamento,estrato,dependencia_economica,trabajociudad,trabajodepartamento,anios_trabajo,cargo_ocupa,tipo_cargo,anios_cargo,nombre_area,tipo_contrato,horas_diarias,sexo,tipo_vivienda,tipo_salario from datospersonales where identificacion=:identificacion"; 
+      $result = $conexion->db->prepare($sql);     
+      $params = array("identificacion" => $identificacion); 
+      $result->execute($params); 
+      return ($result); 
+   }
+
+   public function ActualizarDatosPersonales($id,$tipo_documento,$identificacion,$nombre_completo,$anio_nacimiento,$estado_civil,$nivel_estudio,$ocupacion_profesion,$residenciaciudad,$residenciadepartamento,$estrato,$dependencia_economica,$trabajociudad,$trabajodepartamento,$aniostrabajo,$cargo_ocupa,$tipo_cargo,$aniosCtrabajo,$nombre_area,$tipo_contrato,$horas_diarias,$sexoradio,$viviendaradio,$salarioradio) { 
+      try {
+            $conexion = Database::getInstance(); 
+            $result = $conexion->db->prepare("UPDATE datospersonales set tipo_documento=:tipo_documento, identificacion=:identificacion, nombre_completo=:nombre_completo, anio_nacimiento=:anio_nacimiento,estado_civil=:estado_civil,nivel_estudio=:nivel_estudio, ocupacion_profesion=:ocupacion_profesion, residenciaciudad=:residenciaciudad, residenciadepartamento=:residenciadepartamento, estrato=:estrato, dependencia_economica=:dependencia_economica, trabajociudad=:trabajociudad, trabajodepartamento=:trabajodepartamento, anios_trabajo=:anios_trabajo, cargo_ocupa=:cargo_ocupa, tipo_cargo=:tipo_cargo, anios_cargo=:anios_cargo, nombre_area=:nombre_area, tipo_contrato=:tipo_contrato, horas_diarias=:horas_diarias, sexo=:sexo, tipo_vivienda=:tipo_vivienda, tipo_salario=:tipo_salario where id=:id");
+            $result->execute(
+                              array(
+                                 ':tipo_documento'          => $tipo_documento,
+                                 ':identificacion'          => $identificacion,
+                                 ':nombre_completo'         => $nombre_completo,
+                                 ':anio_nacimiento'         => $anio_nacimiento,
+                                 ':estado_civil'            => $estado_civil,
+                                 ':nivel_estudio'           => $nivel_estudio,
+                                 ':ocupacion_profesion'     => $ocupacion_profesion,
+                                 ':residenciaciudad'        => $residenciaciudad,
+                                 ':residenciadepartamento'  => $residenciadepartamento,
+                                 ':estrato'                 => $estrato,
+                                 ':dependencia_economica'   => $dependencia_economica,
+                                 ':trabajociudad'           => $trabajociudad,
+                                 ':trabajodepartamento'     => $trabajodepartamento,
+                                 ':anios_trabajo'           => $aniostrabajo,
+                                 ':cargo_ocupa'             => $cargo_ocupa,
+                                 ':tipo_cargo'              => $tipo_cargo,
+                                 ':anios_cargo'             => $aniosCtrabajo,
+                                 ':nombre_area'             => $nombre_area,
+                                 ':tipo_contrato'           => $tipo_contrato,
+                                 ':horas_diarias'           => $horas_diarias,
+                                 ':sexo'                    => $sexoradio,
+                                 ':tipo_vivienda'           => $viviendaradio,
+                                 ':tipo_salario'            => $salarioradio,
+                                 ':id'                      => $id
+                              )
+                           );
+            return "5";
+      } catch(PDOException $e) {
+            return "0";
+      } 
+  }
 
    }
 ?>

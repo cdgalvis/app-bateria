@@ -2867,7 +2867,7 @@ fieldset:disabled a.btn {
   background-color: #007bff;
   border-color: #007bff;
 }
-
+  
 .btn-outline-primary:focus, .btn-outline-primary.focus {
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }
@@ -5588,8 +5588,8 @@ a.badge-dark:focus, a.badge-dark.focus {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #009188;
+  border-color: #009188;
 }
 
 .list-group-item + .list-group-item {

@@ -27,6 +27,7 @@
 		$_SESSION['sess_username'] 	= $row['username'];
 		$_SESSION['sess_nombre'] 	= $row['nombres'].' '.$row['apellidos'];
         $_SESSION['sess_userrole'] 	= $row['roles_id'];
+		$_SESSION['sess_useriden'] 	= $row['identificacion'];
 		session_write_close();
 
 		header('Location: ../vistas/home.php');

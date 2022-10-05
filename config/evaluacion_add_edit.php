@@ -10,27 +10,47 @@
     if(isset($_POST['respuesta']))                 $respuesta                 = $_POST['respuesta'];
     if(isset($_POST['formatoA'])){$formatoA  = $_POST['formatoA'];}else{$formatoA = 0;}            
     if(isset($_POST['formatoB'])){$formatoB  = $_POST['formatoB'];} else{$formatoB = 0;}                 
-    if(isset($_POST['burnout'])) { $burnout = $_POST['burnout']; }else{ $burnout = 0; }                  
- 
-    /*$conexion = new Database;  
-    $result = $conexion->ValidacionEmpresa($documento);
-    $cantidad = $result->rowCount();*/
-
-
-    if($evaluacion_id != ""){
-            
-        $conexion = new Database;  
-        $result = $conexion->updateEvaluacion($evaluacion_id,$companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout);
-        
-    }else{
-        //if($cantidad > 0){
-        //    header('Location: ../index.php?err=3');
-        //}else{
+    if(isset($_POST['burnout'])) { $burnout = $_POST['burnout']; }else{ $burnout = 0; }   
+    if(isset($_POST['users_id']))                  $users_id             = $_POST['users_id']; 
     
-            $conexion = new Database;  
-            $result = $conexion->addEvaluacion($companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout);
-        //}
+    $conteo = $_REQUEST['cont'];
+    $contContac = $_REQUEST['cantidadContac'];
+
+    $conexion = new Database;  
+    $CantEvalu= $conexion->CantidadEvaluaciones();
+
+    foreach($CantEvalu as $CantEva) {
+        $id = $CantEva['id'];
     }
 
-    header('Location: ../vistas/evaluacion/evaluaciones.php');
+    if($evaluacion_id != ""){
+        $id = $evaluacion_id;
+    }
+
+    for ($i = 0; $i < $contContac; $i++) {
+        $vlr1 = 'contac'.$i;
+        $vlr2 = 'nom'.$i;
+
+        if(isset($_REQUEST[$vlr1])){
+            $contacts_id  = $_REQUEST[$vlr1];
+            $nombres      = $_REQUEST[$vlr2];
+            $companies    = $companies_id;
+            $fecha_registro = date('Y-m-d H:i:s');
+
+            $conexion = new Database;  
+            $result = $conexion->addDetEvaluacion($id,$contacts_id,$nombres,$fecha_registro,$companies);
+        }
+    }
+
+    if($evaluacion_id != ""){
+        $conexion = new Database;  
+        $result = $conexion->updateEvaluacion($evaluacion_id,$companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout,$users_id);
+    }else{
+        $conexion = new Database;  
+        $result = $conexion->addEvaluacion($id,$companies_id,$cities_id,$codigo_sesion,$respuesta,$formatoA,$formatoB,$burnout,$users_id);
+    }
+
+    echo  '<script type="text/javascript"> eliminarSession(); </script>';
+
+    header('Location: ../vistas/evaluacion/listevaluaciones.php');
 ?>

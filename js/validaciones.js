@@ -86,11 +86,12 @@ function ValidarInformacionEvaluacion() {
     let formatoA        = document.getElementById('formatoA').value
     let formatoB        = document.getElementById('formatoB').value
     let burnout         = document.getElementById('burnout').value
-    
+    let users_id        = document.getElementById('users_id').value
 
     let mensajes=''
     
     if(companies_id=='')    mensajes +='<li>Debes seleccionar una empresa</li>'
+    if(users_id=='')        mensajes +='<li>Debes seleccionar un usuario</li>'
     if(cities_id=='')       mensajes +='<li>Debes seleccionar una ciudad</li>'
     if(codigo_sesion=='')   mensajes +='<li>Debes agregar un codigo de sesion </li>'
     if(respuesta=='') { 
@@ -141,7 +142,7 @@ function LimpiarInformacionEmpresa() {
     document.getElementById('name').value = ""
 }
 
-function LimpiarInformacionEvaluacion() {
+function LimpiarInformacionEvaluaciones() {
     document.getElementById('companies_id').value = ""
     document.getElementById('evaluacion_id').value = ""
     document.getElementById('cities_id').value = ""
@@ -150,6 +151,15 @@ function LimpiarInformacionEvaluacion() {
     document.getElementById('formatoA').value = ""
     document.getElementById('formatoB').value = ""
     document.getElementById('burnout').value = ""
+    document.getElementById('users_id').value = ""
+
+    let div = document.getElementById('limpiar');
+    div.style.display = 'none';
+
+    let div2 = document.getElementById('limpiar2');
+    div2.style.display = 'none';
+
+    window.location.href = '../evaluacion/evaluaciones.php'
 }
 
 function ValidarDatos() {
@@ -275,4 +285,233 @@ function showContent() {
     }else {
         element.style.display='none';
     }
+}
+
+
+function EnviarDatosFormatoA() {
+    let conteo_intralaboral = document.getElementById("conteo_intralaboral").value;
+    let conteo_estres       = document.getElementById("conteo_estres").value;
+    let conteo_extralaboral = document.getElementById("conteo_extralaboral").value;
+
+    let mensajes ='<header class="text-center"><b> FACTORES DE RIESGO PSICOSOCIAL INTRALABORAL </b></header><br>'
+    mensajes +='<ul class="text-left">'
+    for (let i = 1; i <= conteo_intralaboral; i++) {
+        let intralaboral   = document.getElementsByName('intralaboral'+i)[0].value
+
+        if(intralaboral == "") mensajes +=`<li>Debe seleccionar la pregunta ${i} </li>`
+    }
+    mensajes +='</ul>'
+
+    mensajes +='<header class="text-center"><b> EVALUACIÓN DEL ESTRÉS </b></header><br>'
+    mensajes +='<ul class="text-left">'
+    for (let i = 1; i <= conteo_estres; i++) {
+        let estres   = document.getElementsByName('estres'+i)[0].value
+
+        if(estres == "") mensajes +=`<li>Debe seleccionar la pregunta ${i} </li>`
+    }
+    mensajes +='</ul>'
+
+    mensajes +='<header class="text-center"><b> FACTORES PSICOSOCIALES EXTRALABORALES </b></header><br>'
+    mensajes +='<ul class="text-left">'
+    for (let i = 1; i <= conteo_extralaboral; i++) {
+        let extralaboral   = document.getElementsByName('extralaboral'+i)[0].value
+
+        if(extralaboral == "") mensajes +=`<li>Debe seleccionar la pregunta ${i} </li>`
+    }
+    mensajes +='</ul>'
+
+    let datos = `<header class="text-center"><b> FACTORES DE RIESGO PSICOSOCIAL INTRALABORAL </b></header><br><ul class="text-left"></ul><header class="text-center"><b> EVALUACIÓN DEL ESTRÉS </b></header><br><ul class="text-left"></ul><header class="text-center"><b> FACTORES PSICOSOCIALES EXTRALABORALES </b></header><br><ul class="text-left"></ul>`
+
+
+    if(mensajes.trim() == datos.trim()) {
+        igual = 0
+    }else{
+        igual = 1
+    }
+
+    if(igual == 1){
+        Swal.fire({
+            title: '<strong>Te faltan los siguientes datos: </strong>',
+            icon: 'error',
+            html:
+              '<div class="alert alert-danger" role="alert">' + mensajes + '</div>',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false
+          })
+        
+    }else{
+        document.formatoA.submit()
+    }
+
+}
+
+function EnviarDatosFormatoB() {
+    let conteo_intralaboral = document.getElementById("conteo_intralaboral").value;
+    let conteo_extralaboral = document.getElementById("conteo_extralaboral").value;
+
+    let mensajes ='<header class="text-center"><b> FACTORES DE RIESGO PSICOSOCIAL INTRALABORAL </b></header><br>'
+    mensajes +='<ul class="text-left">'
+    for (let i = 1; i <= conteo_intralaboral; i++) {
+        let intralaboral   = document.getElementsByName('intralaboral'+i)[0].value
+
+        if(intralaboral == "") mensajes +=`<li>Debe seleccionar la pregunta ${i} </li>`
+    }
+    mensajes +='</ul>'
+
+    mensajes +='<header class="text-center"><b> FACTORES PSICOSOCIALES EXTRALABORALES </b></header><br>'
+    mensajes +='<ul class="text-left">'
+    for (let i = 1; i <= conteo_extralaboral; i++) {
+        let extralaboral   = document.getElementsByName('extralaboral'+i)[0].value
+
+        if(extralaboral == "") mensajes +=`<li>Debe seleccionar la pregunta ${i} </li>`
+    }
+    mensajes +='</ul>'
+
+    let datos = `<header class="text-center"><b> FACTORES DE RIESGO PSICOSOCIAL INTRALABORAL </b></header><br><ul class="text-left"></ul><header class="text-center"><b> FACTORES PSICOSOCIALES EXTRALABORALES </b></header><br><ul class="text-left"></ul>`
+
+
+    if(mensajes.trim() == datos.trim()) {
+        igual = 0
+    }else{
+        igual = 1
+    }
+
+    if(igual == 1){
+        Swal.fire({
+            title: '<strong>Te faltan los siguientes datos: </strong>',
+            icon: 'error',
+            html:
+              '<div class="alert alert-danger" role="alert">' + mensajes + '</div>',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false
+          })
+        
+    }else{
+        document.formatoB.submit()
+    }
+
+}
+
+
+function EnviarDatosBurnout() {
+    let conteo_burnout = document.getElementById("conteo_burnout").value;
+
+    let mensajes ='<header class="text-center"><b> BURNOUT </b></header><br>'
+    mensajes +='<ul class="text-left">'
+    for (let i = 1; i <= conteo_burnout; i++) {
+        let burnout   = document.getElementsByName('burnout'+i)[0].value
+
+        if(burnout == "") mensajes +=`<li>Debe seleccionar la pregunta ${i} </li>`
+    }
+    mensajes +='</ul>'
+
+    let datos = `<header class="text-center"><b> BURNOUT </b></header><br><ul class="text-left"></ul>`
+
+    if(mensajes.trim() == datos.trim()) {
+        igual = 0
+    }else{
+        igual = 1
+    }
+
+    if(igual == 1){
+        Swal.fire({
+            title: '<strong>Te faltan los siguientes datos: </strong>',
+            icon: 'error',
+            html:
+              '<div class="alert alert-danger" role="alert">' + mensajes + '</div>',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false
+          })
+        
+    }else{
+        document.Burnout.submit()
+    }
+
+}
+
+
+
+
+
+
+function EnviarDatosGenerales() {
+    let tipo_documento          = document.getElementsByName('tipo_documento')[0].value
+    let identificacion          = document.getElementsByName('identificacion')[0].value
+    let nombre_completo         = document.getElementsByName('nombre_completo')[0].value
+    let sexoradio               = $('input[name="sexoradio"]:checked').val()
+    let anio_nacimiento         = document.getElementsByName('anio_nacimiento')[0].value
+    let estado_civil            = document.getElementsByName('estado_civil')[0].value
+    let nivel_estudio           = document.getElementsByName('nivel_estudio')[0].value
+    let ocupacion_profesion     = document.getElementsByName('ocupacion_profesion')[0].value
+    let residenciaciudad        = document.getElementsByName('residenciaciudad')[0].value
+    let residenciadepartamento  = document.getElementsByName('residenciadepartamento')[0].value
+    let estrato                 = document.getElementsByName('estrato')[0].value
+    let viviendaradio           = $('input[name="viviendaradio"]:checked').val()
+    let dependencia_economica   = document.getElementsByName('dependencia_economica')[0].value
+    let trabajociudad           = document.getElementsByName('trabajociudad')[0].value
+    let trabajodepartamento     = document.getElementsByName('trabajodepartamento')[0].value
+    let anios_trabajo           = document.getElementsByName('anios_trabajo')[0].value
+    let aniosradio              = $('input[name="aniosradio"]:checked').val()
+    let cargo_ocupa             = document.getElementsByName('cargo_ocupa')[0].value
+    let tipo_cargo              = document.getElementsByName('tipo_cargo')[0].value
+    let anios_cargo             = document.getElementsByName('anios_cargo')[0].value
+    let anioscradio             = $('input[name="anioscradio"]:checked').val()
+    let nombre_area             = document.getElementsByName('nombre_area')[0].value
+    let tipo_contrato           = document.getElementsByName('tipo_contrato')[0].value
+    let horas_diarias           = document.getElementsByName('horas_diarias')[0].value
+    let salarioradio            = $('input[name="salarioradio"]:checked').val()
+
+    let mensajes='<header class="text-center"><b> FICHA DE DATOS GENERALES </b></header><br><ul class="text-left">'
+
+    if(tipo_documento       =='') mensajes +='<li>Debes seleccionar un tipo de documento</li>'
+    if(identificacion       =='') mensajes +='<li>Debes agregar un numero de identificacion</li>'
+    if(nombre_completo      =='') mensajes +='<li>Debes agregar su nombre completo</li>'
+    if(typeof(sexoradio)    === "undefined")  mensajes +='<li>Debes seleccionar un sexo</li>'
+    if(anio_nacimiento      =='') mensajes +='<li>Debes agregar tu año de nacimiento</li>'
+    if(estado_civil         =='') mensajes +='<li>Debes seleccionar un estado civil</li>'
+    if(nivel_estudio        =='') mensajes +='<li>Debes seleccionar un nivel de estudio</li>'
+    if(ocupacion_profesion  =='') mensajes +='<li>Debes agregar una ocupación o profesión</li>'
+    if(residenciaciudad     =='') mensajes +='<li>Debes agregar un lugar de residencia actual</li>'
+    if(residenciadepartamento =='') mensajes +='<li>Debes agregar un departamento residencia</li>'
+    if(estrato              =='') mensajes +='<li>Debes seleccionar un estrato</li>'
+    if(typeof(viviendaradio)=== "undefined")  mensajes +='<li>Debes seleccionar un tipo de vivienda</li>'
+    if(dependencia_economica=='') mensajes +='<li>Debes agregar el numero de personas que dependandan de usted</li>'
+    if(trabajociudad        =='') mensajes +='<li>Debes agregar la ciudad de trabajo</li>'
+    if(trabajodepartamento  =='') mensajes +='<li>Debes agregar el departamento de trabajo</li>'
+    if(anios_trabajo        =='' && typeof(aniosradio)=== "undefined") mensajes +='<li>Debes agregar los años que lleva trabajando en esta empresa</li>'
+    if(cargo_ocupa          =='') mensajes +='<li>Debes agregar el nombre del cargo que ocupa</li>'
+    if(tipo_cargo           =='') mensajes +='<li>Debes seleccionar el tipo de cargo</li>'
+    if(anios_cargo          =='' && typeof(anioscradio)=== "undefined") mensajes +='<li>Debes agregar los años que lleva desempeñando el cargo actual</li>'
+    if(nombre_area          =='') mensajes +='<li>Debes agregar el nombre del departamento o area donde trabaja</li>'
+    if(tipo_contrato        =='') mensajes +='<li>Debes seleccionar el tipo de contrato</li>'
+    if(horas_diarias        =='') mensajes +='<li>Debes agregar cuantas horas diarias de trabajo están establecidas por la empresa</li>'
+    if(typeof(salarioradio)=== "undefined")  mensajes +='<li>Debes seleccionar el tipo de salario que recibe</li>'
+    mensajes +='</ul>'
+
+    let datos = `<header class="text-center"><b> FICHA DE DATOS GENERALES </b></header><br><ul class="text-left"></ul>`
+
+    if(mensajes.trim() == datos.trim()) {
+        igual = 0
+    }else{
+        igual = 1
+    }
+
+    if(igual == 1){
+        Swal.fire({
+            title: '<strong>Te faltan los siguientes datos: </strong>',
+            icon: 'error',
+            html:
+              '<div class="alert alert-danger" role="alert">' + mensajes + '</div>',
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false
+          })
+        
+    }else{
+        document.datosgenerales.submit()
+    }
+
 }
