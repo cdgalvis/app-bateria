@@ -185,8 +185,8 @@
                 </div>
 
                 <div class="form-group" style="<?php echo $tip; ?>" id="contentBus">
-                    <input type="text" class="form-control"  name="busqueda" id="busqueda"  placeholder="Escribe para Buscar" style="width : 190px; heigth : 190px" onKeyUp="buscarRegistros(1);"> 
-                </div> 
+                    <input type="hidden" class="form-control"  name="busqueda" id="busqueda"  placeholder="Escribe para Buscar" style="width : 190px; heigth : 190px" onKeyUp="buscarRegistros(1);"> 
+                </div>
 
                 <div id="loader"></div>
                 <div class="outer_div" id='limpiar'></div>

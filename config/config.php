@@ -217,7 +217,7 @@
 
       public function ValidacionUsername($username) { 
          $conexion = Database::getInstance(); 
-         $sql="SELECT id,nombres,apellidos,username,role from users where username=:username"; 
+         $sql="SELECT id,nombres,apellidos,username,roles_id from users where username=:username"; 
          $result = $conexion->db->prepare($sql);     
          $params = array("username" => $username); 
          $result->execute($params); 

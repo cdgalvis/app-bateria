@@ -70,6 +70,7 @@
     <link href="../../bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="../../css/style.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="../../css/jquery.dataTables.css" rel="stylesheet">
     
   </head>
   <body>
@@ -184,8 +185,8 @@
                     <input type="number" class="form-control" id="burnout" name="burnout" value="<?php echo $evaluacion_burnout ?>">
                 </div>
 
-                <div class="form-group" style="<?php echo $tip; ?>" id="contentBus">
-                    <input type="text" class="form-control"  name="busqueda" id="busqueda"  placeholder="Escribe para Buscar" style="width : 190px; heigth : 190px" onKeyUp="buscarRegistros(1);"> 
+                <div class="form-group" style="<?php //echo $tip; ?>" id="contentBus">
+                    <input type="hidden" class="form-control"  name="busqueda" id="busqueda"  placeholder="Escribe para Buscar" style="width : 190px; heigth : 190px" onKeyUp="buscarRegistros(1);"> 
                 </div> 
 
                 <div id="loader"></div>
@@ -218,12 +219,16 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../js/jquery.dataTables.js"></script>
+
+    
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="../../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/validaciones.js"></script>
     
     <script type="text/javascript">
+
         let items = sessionStorage.getItem('itemsList')
         items = items ? JSON.parse(items) : []
 

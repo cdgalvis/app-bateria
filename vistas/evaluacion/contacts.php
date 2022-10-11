@@ -11,7 +11,7 @@
 ?>
 
 <div class="table-responsive">
-  <table style="overflow-y: hidden" class="table">
+  <table style="overflow-y: hidden" class="table" id="table_id" class="display">
         <thead>
             <tr class="text-white" style="background-color: #009188;">
                 <th>Seleccionar</th>
@@ -50,3 +50,10 @@
         </tbody>
     </table>
 </div>
+<br>
+
+<script>
+    $(document).ready( function () {
+        $('#table_id').DataTable();
+    } );
+</script>
