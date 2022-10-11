@@ -61,10 +61,20 @@
          return ($result); 
       }
 
+
       public function DatosRespuestas() 
       { 
          $conexion = Database::getInstance(); 
-         $sql="SELECT res_codigo,res_nombre	 from respuestas order by res_codigo asc"; 
+         $sql="SELECT res_codigo,res_nombre	 from respuestas where res_tipo = 1 order by res_codigo asc"; 
+         $result = $conexion->db->prepare($sql);
+         $result->execute(); 
+         return ($result); 
+      }
+
+      public function DatosRespuestasBournout() 
+      { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT res_codigo,res_nombre	 from respuestas where res_tipo = 2 order by res_codigo asc"; 
          $result = $conexion->db->prepare($sql);
          $result->execute(); 
          return ($result); 
@@ -413,6 +423,15 @@
          return $result; 
       } 
 
+      public function editGrupos($id) { 
+         $conexion = Database::getInstance(); 
+         $sql="SELECT id,gru_nombre,gru_visible,gru_url from groups where id=:id"; 
+         $result = $conexion->db->prepare($sql);     
+         $params = array("id" => $id); 
+         $result->execute($params);
+         return $result; 
+      } 
+
       public function editEvaluacion($id) { 
          $conexion = Database::getInstance(); 
          $sql="SELECT id,companies_id,cities_id,codigo_sesion,respuesta,formatoA,formatoB,burnout,users_id from evaluacion where id=:id"; 
@@ -701,7 +720,125 @@
       } catch(PDOException $e) {
             return "0";
       } 
-  }
-
    }
+
+   public function updateGrupo($id,$gru_nombre,$gru_visible,$gru_url) { 
+
+      try {
+         $conexion = Database::getInstance(); 
+         $result = $conexion->db->prepare("UPDATE groups set gru_nombre=:gru_nombre, gru_visible=:gru_visible,gru_url=:gru_url where id=:id");
+         $result->execute(
+                              array(
+                                 ':gru_nombre'=>$gru_nombre, 
+                                 ':gru_visible'=>$gru_visible, 
+                                 ':gru_url'=>$gru_url,
+                                 ':id'=>$id
+                              )
+                        );
+         return "3";
+      } catch(PDOException $e) {
+         return "0";
+      }
+   }
+
+   public function addGrupo($gru_nombre,$gru_visible,$gru_url) { 
+
+      try {
+          $conexion = Database::getInstance(); 
+          $result = $conexion->db->prepare("INSERT INTO groups (gru_nombre,gru_visible,gru_url) VALUES (:gru_nombre, :gru_visible, :gru_url)");
+          $result->execute(
+                              array(
+                              ':gru_nombre'=>$gru_nombre,
+                              ':gru_visible'=>$gru_visible,
+                              ':gru_url'=>$gru_url
+                              )
+                          );
+          return "5";
+      } catch(PDOException $e) {
+          return "0";
+      }
+   }
+
+   public function deleteGrupo($id){
+      try{
+          $conexion = Database::getInstance(); 
+          $result = $conexion->db->prepare("UPDATE groups set gru_visible=1 WHERE id=:id");
+          $result->execute(array(':id'=>$id));
+
+          return "1";
+      }catch (PDOException $e) {
+          return "0";
+      }
+   }
+
+   public function DatosListaModulos() 
+   { 
+      $conexion = Database::getInstance(); 
+      $sql="SELECT id,mod_nombre,mod_visible,mod_url,groups_id from modules order by id asc"; 
+      $result = $conexion->db->prepare($sql);
+      $result->execute(); 
+      return ($result); 
+   }
+
+   public function editModulos($id) { 
+      $conexion = Database::getInstance(); 
+      $sql="SELECT id,mod_nombre,mod_visible,mod_url,groups_id from modules where id=:id"; 
+      $result = $conexion->db->prepare($sql);     
+      $params = array("id" => $id); 
+      $result->execute($params);
+      return $result; 
+   }
+
+   public function updateModulos($id,$mod_nombre,$mod_visible,$mod_url,$groups_id) { 
+
+      try {
+         $conexion = Database::getInstance(); 
+         $result = $conexion->db->prepare("UPDATE modules set mod_nombre=:mod_nombre, mod_visible=:mod_visible,mod_url=:mod_url,groups_id=:groups_id where id=:id");
+         $result->execute(
+                              array(
+                                 ':mod_nombre'=>$mod_nombre, 
+                                 ':mod_visible'=>$mod_visible, 
+                                 ':mod_url'=>$mod_url,
+                                 ':groups_id'=>$groups_id,
+                                 ':id'=>$id
+                              )
+                        );
+         return "3";
+      } catch(PDOException $e) {
+         return "0";
+      }
+   }
+
+   public function addModulos($mod_nombre,$mod_visible,$mod_url,$groups_id) { 
+
+      try {
+          $conexion = Database::getInstance(); 
+          $result = $conexion->db->prepare("INSERT INTO modules (mod_nombre,mod_visible,mod_url,groups_id) VALUES (:mod_nombre, :mod_visible, :mod_url, :groups_id)");
+          $result->execute(
+                              array(
+                              ':mod_nombre'=>$mod_nombre,
+                              ':mod_visible'=>$mod_visible,
+                              ':mod_url'=>$mod_url,
+                              ':groups_id'=>$groups_id
+                              )
+                          );
+          return "5";
+      } catch(PDOException $e) {
+          return "0";
+      }
+   }
+
+   public function deleteModulo($id){
+      try{
+          $conexion = Database::getInstance(); 
+          $result = $conexion->db->prepare("UPDATE modules set mod_visible=1 WHERE id=:id");
+          $result->execute(array(':id'=>$id));
+
+          return "1";
+      }catch (PDOException $e) {
+          return "0";
+      }
+   }
+
+}
 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-10-2022 a las 17:27:22
+-- Tiempo de generación: 12-10-2022 a las 00:47:07
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 7.3.29
 
@@ -1165,7 +1165,7 @@ INSERT INTO `companies` (`id`, `nombre`, `documento`, `direccion`, `telefono`, `
 (1, 'Prueba 2', '124578451', 'Calle 2', 124578451, 'Cristhian 2', 'Prueba', 0),
 (2, 'Empresa 1', '365478', 'Calle', 6547845, 'Prueba ', 'pru', 0),
 (3, 'Prueba', '12345678', 'Calle Prueba', 77444, 'Prueba David', '5', 1),
-(4, 'qweqwe', '345346', 'qweqwe', 324234, 'Prueba David', '5', 0),
+(4, 'qweqwe', '345346', 'qweqwe', 324234, 'Prueba David', '5', 1),
 (5, 'Cristhian ', '25487956', 'Prueba', 2145, 'Prueba', '5', 0);
 
 -- --------------------------------------------------------
@@ -1241,7 +1241,7 @@ CREATE TABLE `datospersonales` (
 --
 
 INSERT INTO `datospersonales` (`id`, `tipo_documento`, `identificacion`, `nombre_completo`, `anio_nacimiento`, `estado_civil`, `nivel_estudio`, `ocupacion_profesion`, `residenciaciudad`, `residenciadepartamento`, `estrato`, `dependencia_economica`, `trabajociudad`, `trabajodepartamento`, `anios_trabajo`, `cargo_ocupa`, `tipo_cargo`, `anios_cargo`, `nombre_area`, `tipo_contrato`, `horas_diarias`, `sexo`, `tipo_vivienda`, `tipo_salario`) VALUES
-(1, 'CEDULA', '987456321', 'Cristhian Galvis', '1993', 'Unión libre', 'Primaria incompleta', 'Ingeniero', '282', '66', '2', '2', '547', '5', 'Menos de un Año', 'ingeniero', 'Profesional-analista-técnico-tecnólogo', 'Menos de un Año', 'Datos', 'Término indefinido', '8', 'Masculino', 'Propia', 'Fijo');
+(1, 'CEDULA', '987456321', 'Lisbeth Roldan', '1993', 'Unión libre', 'Primaria incompleta', 'Ingeniero', '282', '66', '2', '2', '547', '5', 'Menos de un Año', 'ingeniero', 'Profesional-analista-técnico-tecnólogo', 'Menos de un Año', 'Datos', 'Término indefinido', '8', 'Femenino', 'Propia', 'Fijo');
 
 -- --------------------------------------------------------
 
@@ -1305,7 +1305,8 @@ CREATE TABLE `detalle_respuestas` (
   `det_tipo` int(11) NOT NULL,
   `det_pregunta` int(11) NOT NULL,
   `det_respuesta` int(11) NOT NULL,
-  `det_usuario` int(11) NOT NULL
+  `det_usuario` int(11) NOT NULL,
+  `det_fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1322,15 +1323,6 @@ CREATE TABLE `detevaluacion` (
   `fecha_registro` date NOT NULL,
   `companies_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `detevaluacion`
---
-
-INSERT INTO `detevaluacion` (`id`, `evaluacion_id`, `contacts_id`, `nombres`, `fecha_registro`, `companies_id`) VALUES
-(1, 1, 4, 'Karolina Andes', '2022-08-18', 2),
-(5, 2, 5, 'Andres Galvis', '2022-08-23', 4),
-(7, 1, 5, 'Andres Galvis', '2022-08-23', 2);
 
 -- --------------------------------------------------------
 
@@ -1399,7 +1391,8 @@ CREATE TABLE `groups` (
 INSERT INTO `groups` (`id`, `gru_nombre`, `gru_visible`, `gru_url`) VALUES
 (1, 'Sistema', 0, ''),
 (2, 'Evaluación', 0, ''),
-(3, 'Digitación', 0, '');
+(3, 'Digitación', 0, ''),
+(7, 'Informes', 0, '#');
 
 -- --------------------------------------------------------
 
@@ -1426,7 +1419,8 @@ INSERT INTO `modpermi` (`id`, `modules_id`, `users_id`) VALUES
 (6, 10, 3),
 (7, 9, 3),
 (8, 7, 3),
-(9, 4, 3);
+(9, 4, 3),
+(12, 15, 3);
 
 -- --------------------------------------------------------
 
@@ -1455,7 +1449,9 @@ INSERT INTO `modules` (`id`, `mod_nombre`, `mod_visible`, `mod_url`, `groups_id`
 (6, 'Formato B', 0, 'vistas/formatos/formatob.php', 3),
 (7, 'Burn-Out', 0, 'vistas/formatos/burnout.php', 3),
 (9, 'Ver Evaluaciones', 0, 'vistas/evaluacion/listevaluaciones.php', 2),
-(10, 'Evaluación', 0, 'vistas/evaluacion/evaluaciones.php', 2);
+(10, 'Evaluación', 0, 'vistas/evaluacion/evaluaciones.php', 2),
+(15, 'Grupos', 0, 'vistas/modulos/grupos.php', 1),
+(16, 'Evaluaciones x Contacto', 0, '#', 7);
 
 -- --------------------------------------------------------
 
@@ -2995,19 +2991,27 @@ INSERT INTO `preguntas` (`pre_codigo`, `pre_nombre`, `form_codigo`, `tip_codigo`
 
 CREATE TABLE `respuestas` (
   `res_codigo` int(11) NOT NULL,
-  `res_nombre` varchar(50) NOT NULL
+  `res_nombre` varchar(50) NOT NULL,
+  `res_tipo` varchar(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `respuestas`
 --
 
-INSERT INTO `respuestas` (`res_codigo`, `res_nombre`) VALUES
-(1, 'Siempre'),
-(2, 'Casi siempre'),
-(3, 'Algunas veces'),
-(4, 'Casi nunca'),
-(5, 'Nunca');
+INSERT INTO `respuestas` (`res_codigo`, `res_nombre`, `res_tipo`) VALUES
+(0, 'Nunca', '2'),
+(1, 'Pocas veces al año', '2'),
+(2, 'Una vez al mes o menos', '2'),
+(3, 'Unas pocas veces al mes', '2'),
+(4, 'Una vez a la semana', '2'),
+(5, 'Pocas veces a la semana', '2'),
+(6, 'Todos los días', '2'),
+(7, 'Siempre', '1'),
+(8, 'Casi siempre', '1'),
+(9, 'Algunas veces', '1'),
+(10, 'Casi nunca', '1'),
+(11, 'Nunca', '1');
 
 -- --------------------------------------------------------
 
@@ -3078,7 +3082,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `tipo_documento`, `nombres`, `apellidos`, `username`, `password`, `roles_id`, `identificacion`, `email`, `active`) VALUES
 (1, 'CEDULA', 'David', 'Gomez', 'DGomez', '12345678', 1, 1234578451, '', 0),
 (2, 'CEDULA', 'Madisson', 'Galvis', 'MGalvis', '12345678', 1, 12345678, '', 0),
-(3, 'CEDULA', 'Lisbeth', 'Roldan', 'LRoldan', '12345678', 1, 987456321, '', 0),
+(3, 'CEDULA', 'Lisbeth', 'Roldan', 'LRoldan', '12345678', 1, 987456321, '', 1),
 (4, 'CEDULA', 'Cristhian', 'Galvis', 'cgalvis', '12345678', 1, 1234578451, 'cgalvis@prueba.com', 1),
 (5, 'CEDULA', 'Carlos Andres', 'Gonzales Arenas', 'cgonzales', '12345678', 2, 2147483647, 'cgonzales@gmail.com', 1),
 (6, 'CEDULA', 'Hernan', 'Ramirez', 'hramirez', '12345678', 2, 354125474, 'hramirez@gmail.com', 1);
@@ -3091,8 +3095,7 @@ INSERT INTO `users` (`id`, `tipo_documento`, `nombres`, `apellidos`, `username`,
 -- Indices de la tabla `cities`
 --
 ALTER TABLE `cities`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id` (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `companies`
@@ -3142,7 +3145,6 @@ ALTER TABLE `detevaluacion`
 ALTER TABLE `evaluacion`
   ADD PRIMARY KEY (`id`),
   ADD KEY `companies_id` (`companies_id`),
-  ADD KEY `cities_id` (`cities_id`),
   ADD KEY `users_id` (`users_id`),
   ADD KEY `id` (`id`);
 
@@ -3198,7 +3200,7 @@ ALTER TABLE `preguntas`
 -- Indices de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  ADD PRIMARY KEY (`res_codigo`),
+  ADD PRIMARY KEY (`res_codigo`,`res_tipo`) USING BTREE,
   ADD KEY `res_codigo` (`res_codigo`);
 
 --
@@ -3268,7 +3270,7 @@ ALTER TABLE `detalle_respuestas`
 -- AUTO_INCREMENT de la tabla `detevaluacion`
 --
 ALTER TABLE `detevaluacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `evaluacion`
@@ -3286,19 +3288,19 @@ ALTER TABLE `formatos`
 -- AUTO_INCREMENT de la tabla `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `modpermi`
 --
 ALTER TABLE `modpermi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `modules`
 --
 ALTER TABLE `modules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `municipios`
@@ -3310,7 +3312,7 @@ ALTER TABLE `municipios`
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `res_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `res_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`

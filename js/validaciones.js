@@ -415,7 +415,7 @@ function EnviarDatosBurnout() {
         igual = 1
     }
 
-    /*if(igual == 1){
+    if(igual == 1){
         Swal.fire({
             title: '<strong>Te faltan los siguientes datos: </strong>',
             icon: 'error',
@@ -426,9 +426,9 @@ function EnviarDatosBurnout() {
             focusConfirm: false
           })
         
-    }else{*/
+    }else{
         document.Burnout.submit()
-    //}
+    }
 
 }
 
@@ -514,4 +514,60 @@ function EnviarDatosGenerales() {
         document.datosgenerales.submit()
     }
 
+}
+
+
+function LimpiarInformacionGrupo() {
+    document.getElementById('gru_nombre').value = ""
+    document.getElementById('gru_visible').value= "" 
+    document.getElementById('gru_url').value= ""    
+}
+
+function ValidarInformacionGrupo() {
+
+    let gru_nombre    = document.getElementById('gru_nombre').value
+    let gru_visible   = document.getElementById('gru_visible').value
+    let gru_url       = document.getElementById('gru_url').value
+
+    let mensajes=''
+    
+    if(gru_nombre=='')     mensajes +='<li>Debes escribir un nombre al grupo</li>'
+    if(gru_visible=='')    mensajes +='<li>Debes seleccionar un estado</li>'
+    if(gru_url=='')        mensajes +='<li>Debes escribir una url</li>'
+    
+    if(mensajes!=''){
+        document.getElementById('mensaje').innerHTML = `<div class='alert alert-danger' role='alert'> ${mensajes} </div>`
+    }else{
+        document.forgrupo.submit()
+    }
+    
+}
+
+function LimpiarInformacionModulo() {
+    document.getElementById('mod_nombre').value = ""
+    document.getElementById('mod_visible').value= "" 
+    document.getElementById('mod_url').value= "" 
+    document.getElementById('groups_id').value= ""    
+}
+
+function ValidarInformacionModulo() {
+
+    let mod_nombre    = document.getElementById('mod_nombre').value
+    let mod_visible   = document.getElementById('mod_visible').value
+    let mod_url       = document.getElementById('mod_url').value
+    let groups_id       = document.getElementById('groups_id').value
+
+    let mensajes=''
+    
+    if(mod_nombre=='')     mensajes +='<li>Debes escribir un nombre al modulo</li>'
+    if(mod_visible=='')    mensajes +='<li>Debes seleccionar un estado</li>'
+    if(mod_url=='')        mensajes +='<li>Debes escribir una url</li>'
+    if(groups_id=='')      mensajes +='<li>Debes seleccionar un grupo</li>'
+    
+    if(mensajes!=''){
+        document.getElementById('mensaje').innerHTML = `<div class='alert alert-danger' role='alert'> ${mensajes} </div>`
+    }else{
+        document.formodulo.submit()
+    }
+    
 }

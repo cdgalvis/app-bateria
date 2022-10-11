@@ -101,7 +101,7 @@
                                       <option value=''>Seleccione una Respuesta</option>
                                       <?php
                                         $conexion = new Database;  
-                                        $resultRespuestas = $conexion->DatosRespuestas();
+                                        $resultRespuestas = $conexion->DatosRespuestasBournout();
 
                                         foreach($resultRespuestas as $respuestas) {
                                           echo "<option value='".$respuestas['res_codigo']."'>".$respuestas['res_nombre']."</option>";
